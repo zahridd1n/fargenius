@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
-from .models import Category, Contact, Text, About_image, Porfolio, Client, Social, Navbar, Slider, Client_about
+from .models import Category, Contact, Text, About_image, Porfolio, Client, Social, Navbar, Slider, Client_about,SubCategory
 from rest_framework import generics, permissions
 from rest_framework import generics
 import requests
@@ -60,7 +60,31 @@ class PortfolioView(APIView):
         return Response(serializer.data)
 
 
-class Portfolio_Category_View(APIView):
+class Category_about(APIView):
+    def get(self, request, id=None, lang=None):
+
+
+        category = Category.objects.filter(id=id)
+        subcategories = SubCategory.objects.filter(subcat=id) if id else SubCategory.objects.all()
+        subcategory_serializer = SubCategorySerializer(subcategories, many=True, context={'lang': lang})
+        category_serializer = CategorySerializer(category, many=True, context={'lang': lang})
+        
+        response_data = {
+            'category_info':category_serializer.data,
+            'subcategories': subcategory_serializer.data
+        }
+        return Response(response_data)
+
+
+class ClientAboutView(APIView):
+    def get(self, request, lang=None):
+        client_about = Client_about.objects.all()
+        serializer = Client_aboutSerializer(client_about, many=True, context={'lang': lang})
+        return Response(serializer.data)
+
+
+
+class PortfolioFilter(APIView):
     def get(self, request, id=None, lang=None):
         if id is not None:
             portfolio = Porfolio.objects.filter(category_id=id)
@@ -70,11 +94,6 @@ class Portfolio_Category_View(APIView):
         return Response(serializer.data)
 
 
-class ClientAboutView(APIView):
-    def get(self, request, lang=None):
-        client_about = Client_about.objects.all()
-        serializer = Client_aboutSerializer(client_about, many=True, context={'lang': lang})
-        return Response(serializer.data)
 
 
 class ContactView(APIView):

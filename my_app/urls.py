@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import CategoryView,PortfolioView,ContactView,NavbarView,SliderView,AboutView,Portfolio_Category_View,ClientAboutView,ContactView
+from .views import CategoryView,PortfolioView,ContactView,NavbarView,SliderView,AboutView,PortfolioFilter,ClientAboutView,ContactView,Category_about
 
 
 urlpatterns = [
@@ -8,8 +8,12 @@ urlpatterns = [
     path('view_category/<int:id>/<str:lang>/', CategoryView.as_view()),
     path('view_portfolio/<str:lang>/', PortfolioView.as_view()),
     path('view_portfolio/<int:id>/<str:lang>/', PortfolioView.as_view()),
-    path('view_portfolio_category/<str:lang>/', Portfolio_Category_View.as_view()),
-    path('view_portfolio_category/<int:id>/<str:lang>/', Portfolio_Category_View.as_view()),
+    path('view_category_about/<str:lang>/', Category_about.as_view()),
+    path('view_category_about/<int:id>/<str:lang>/', Category_about.as_view()),
+    
+
+    path('view_category_portfolio/<str:lang>/', PortfolioFilter.as_view()),
+    path('view_category_portfolio/<int:id>/<str:lang>/', PortfolioFilter.as_view()),
 
     path('view_contact/<str:lang>/', ContactView.as_view()),
     path('view_slider/<str:lang>/', SliderView.as_view()),

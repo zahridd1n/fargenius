@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from .models import Category,Contact,Text,About_image,Porfolio,Client,Social,Navbar,Slider,Client_about,Register
+from .models import Category,Contact,Text,About_image,Porfolio,Client,Social,Navbar,Slider,Client_about,Register,SubCategory
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name','title','description','icon')
+    list_display = ('name','description','icon')
 
 
-
+admin.site.register(SubCategory)
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('description','image1','image2')
@@ -27,7 +27,7 @@ class About_imageAdmin(admin.ModelAdmin):
 
 @admin.register(Porfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('name','description','client_name','client_description','photo','photo1','photo2','photo3','photo4','photo5')
+    list_display = ('name',)
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):

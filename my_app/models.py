@@ -30,21 +30,33 @@ class Category(BaseModel):
     name = models.CharField(max_length=100)
     name_ru = models.CharField(max_length=100, null=True, blank=True)
     name_en = models.CharField(max_length=100, null=True, blank=True)
-    title = models.TextField()
-    title_ru = models.TextField(null=True, blank=True)
-    title_en = models.TextField(null=True, blank=True)
     description = models.TextField()
     description_ru = models.TextField(null=True, blank=True)
     description_en = models.TextField(null=True, blank=True)
     icon = models.ImageField(upload_to="Service/photo",   verbose_name='Servis  ikon kiriting')
-    photo = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting')
-    photo1 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo2 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo3 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo4 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-
+   
     def __str__(self):
         return self.name
+
+
+class SubCategory(BaseModel):
+    subcat_title = models.TextField(null=True, blank=True)
+    subcat_title_ru = models.TextField(null=True, blank=True)
+    subcat_title_en = models.TextField(null=True, blank=True)
+    sub_description = models.TextField(null=True, blank=True)
+    sub_description_ru = models.TextField(null=True, blank=True)
+    sub_description_en = models.TextField(null=True, blank=True)
+    sub_description1 = models.TextField(null=True, blank=True)
+    sub_description1_ru = models.TextField(null=True, blank=True)
+    sub_description1_en = models.TextField(null=True, blank=True)
+    sub_photo = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting')
+    sub_photo1 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
+    sub_photo2 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
+    sub_photo3 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
+    sub_photo4 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
+    subcat = models.ForeignKey(Category, verbose_name='Qaysi categoriyaga oidligini kiriting', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.subcat_title
 
 
 class Text(BaseModel):
@@ -68,28 +80,32 @@ class About_image(BaseModel):
 
 
 class Porfolio(BaseModel):
-    name = models.CharField(max_length=100)
-    name_ru = models.CharField(max_length=100, null=True, blank=True)
-    name_en = models.CharField(max_length=100, null=True, blank=True)
-    description = models.TextField()
-    description_ru = models.TextField(null=True, blank=True)
-    description_en = models.TextField(null=True, blank=True)
-    client_name = models.CharField(max_length=100)
-    client_name_ru = models.CharField(max_length=100, null=True, blank=True)
-    client_name_en = models.CharField(max_length=100, null=True, blank=True)
-    client_description = models.TextField()
-    client_description_ru = models.TextField(null=True, blank=True)
-    client_description_en = models.TextField(null=True, blank=True)
-    photo = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio rasmini kiriting')
-    photo1 = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo2 = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo3 = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo4 = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    photo5 = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    category_id = models.ForeignKey(Category,verbose_name="Kategoriyani tanlang", on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, verbose_name='Name')
+    name_ru = models.CharField(max_length=100, null=True, blank=True, verbose_name='Name (Russian)')
+    name_en = models.CharField(max_length=100, null=True, blank=True, verbose_name='Name (English)')
+    client_name = models.CharField(max_length=100, verbose_name='Client Name')
+    client_name_ru = models.CharField(max_length=100, null=True, blank=True, verbose_name='Client Name (Russian)')
+    client_name_en = models.CharField(max_length=100, null=True, blank=True, verbose_name='Client Name (English)')
+    about_project = models.TextField(null=True, blank=True, verbose_name='About Project')
+    about_project_ru = models.TextField(null=True, blank=True, verbose_name='About Project (Russian)')
+    about_project_en = models.TextField(null=True, blank=True, verbose_name='About Project (English)')
+    problems = models.TextField(null=True, blank=True, verbose_name='Problems')
+    problems_ru = models.TextField(null=True, blank=True, verbose_name='Problems (Russian)')
+    problems_en = models.TextField(null=True, blank=True, verbose_name='Problems (English)')
+    our_solution = models.TextField(null=True, blank=True, verbose_name='Our Solution')
+    our_solution_ru = models.TextField(null=True, blank=True, verbose_name='Our Solution (Russian)')
+    our_solution_en = models.TextField(null=True, blank=True, verbose_name='Our Solution (English)')
+    photo = models.ImageField(upload_to="portfolio/photo", verbose_name='Portfolio Photo')
+    photo1 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 1', blank=True, null=True)
+    photo2 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 2', blank=True, null=True)
+    photo3 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 3', blank=True, null=True)
+    photo4 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 4', blank=True, null=True)
+    photo5 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 5', blank=True, null=True)
+    category_id = models.ForeignKey(Category, verbose_name="Category", on_delete=models.CASCADE)
+    
+    def get_category_name(self):
+        return self.category_id.name 
 
-    def __str__(self) -> str:
-        return self.name
     
 
 class Client_about(BaseModel):

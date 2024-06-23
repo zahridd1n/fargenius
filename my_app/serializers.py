@@ -1,18 +1,16 @@
 from rest_framework import serializers
 from .models import Category, Contact, Text, About_image, Porfolio, Client, Social, Navbar, Slider, Client_about, \
-    Register
+    Register,SubCategory
 from rest_framework.validators import ValidationError
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField()
-    title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'title', 'description', 'icon', 'photos')
+        fields = ('id', 'name', 'description', 'icon')
 
     def get_name(self, obj):
         lang = self.context.get('lang', 'uz')
@@ -40,15 +38,7 @@ class CategorySerializer(serializers.ModelSerializer):
             return obj.description_ru
         return obj.description
 
-    def get_photos(self, instance):
-        photos = [
-            instance.photo.url if instance.photo else None,
-            instance.photo1.url if instance.photo1 else None,
-            instance.photo2.url if instance.photo2 else None,
-            instance.photo3.url if instance.photo3 else None,
-            instance.photo4.url if instance.photo4 else None,
-        ]
-        return photos
+    
 
 
 class TextSerializer(serializers.ModelSerializer):
@@ -64,13 +54,11 @@ from .models import Porfolio
 class PorfolioSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
     client_name = serializers.SerializerMethodField()
-    client_description = serializers.SerializerMethodField()
 
     class Meta:
         model = Porfolio
-        fields = ('id', 'category_id', 'name', 'description', 'client_name', 'client_description', 'photos')
+        fields = ('id', 'category_id', 'name', 'client_name', 'about_project','problems','our_solution', 'photos')
 
     def get_name(self, obj):
         lang = self.context.get('lang', 'uz')
@@ -80,13 +68,23 @@ class PorfolioSerializer(serializers.ModelSerializer):
             return obj.name_ru
         return obj.name
 
-    def get_description(self, obj):
+    def get_category_name(self, obj):
+        lang = self.context.get('lang', 'uz')  # Lang parametri olish
+        if lang == 'en':
+            return obj.category_id.name_en
+        elif lang == 'ru':
+            return obj.category_id.name_ru
+        else:
+            return obj.category_id.name
+        
+    def get_category_description(self,obj):
         lang = self.context.get('lang', 'uz')
         if lang == 'en':
-            return obj.description_en
+            return obj.category_id.description_en
         elif lang == 'ru':
-            return obj.description_ru
-        return obj.description
+            return obj.category_id.description_ru
+        else:
+            return obj.category_id.description
 
     def get_client_name(self, obj):
         lang = self.context.get('lang', 'uz')
@@ -96,13 +94,6 @@ class PorfolioSerializer(serializers.ModelSerializer):
             return obj.client_name_ru
         return obj.client_name
 
-    def get_client_description(self, obj):
-        lang = self.context.get('lang', 'uz')
-        if lang == 'en':
-            return obj.client_description_en
-        elif lang == 'ru':
-            return obj.client_description_ru
-        return obj.client_description
 
     def get_photos(self, instance):
         photos = [
@@ -115,8 +106,55 @@ class PorfolioSerializer(serializers.ModelSerializer):
         ]
         return photos
 
+        
+    def to_representation(self, instance):
+        lang = self.context.get('lang', 'uz')  # Lang parametri olish
+        data = super().to_representation(instance)
+        data['name'] = getattr(instance, f'name_{lang}', instance.name)
+        data['client_name'] = self.get_client_name(instance)
+        data['about_project'] = getattr(instance, f'about_project_{lang}', instance.about_project)
+        data['problems'] = getattr(instance, f'problems_{lang}', instance.problems)
+        data['our_solution'] = getattr(instance, f'our_solution_{lang}', instance.our_solution)
+        data['category_name'] = self.get_category_name(instance)
+        data['category_description'] = self.get_category_description(instance)
+
+        return data
     def get_category(self, obj):
         return obj.category.name
+    
+class SubCategorySerializer(serializers.ModelSerializer):
+    sub_photo = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SubCategory
+        fields = ('id', 'subcat_title', 'sub_description', 'sub_description1', 'sub_photo')
+
+    def get_sub_photo(self, instance):
+        sub_photo = [
+            instance.sub_photo.url if instance.sub_photo else None,
+            instance.sub_photo1.url if instance.sub_photo1 else None,
+            instance.sub_photo2.url if instance.sub_photo2 else None,
+            instance.sub_photo3.url if instance.sub_photo3 else None,
+            instance.sub_photo4.url if instance.sub_photo4 else None,
+        ]
+        return sub_photo
+
+    def to_representation(self, instance):
+        lang = self.context.get('lang', 'uz')
+        data = super().to_representation(instance)
+
+        data['subcat_title'] = getattr(instance, f'subcat_title_{lang}', instance.subcat_title)
+        data['sub_description'] = getattr(instance, f'sub_description_{lang}', instance.sub_description)
+        data['sub_description1'] = getattr(instance, f'sub_description1_{lang}', instance.sub_description1)
+        
+        return data
+
+
+
+
+
+
+
 
 
 class ContactSerializer(serializers.ModelSerializer):
