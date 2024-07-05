@@ -34,7 +34,7 @@ class Category(BaseModel):
     description_ru = models.TextField(null=True, blank=True)
     description_en = models.TextField(null=True, blank=True)
     icon = models.ImageField(upload_to="Service/photo",   verbose_name='Servis  ikon kiriting')
-   
+    icon_light = models.ImageField(upload_to="Service/photo", verbose_name="liGhT model uchun ikon")   
     def __str__(self):
         return self.name
 
@@ -101,6 +101,8 @@ class Porfolio(BaseModel):
     photo3 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 3', blank=True, null=True)
     photo4 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 4', blank=True, null=True)
     photo5 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 5', blank=True, null=True)
+    photo6 = models.ImageField(upload_to="portfolio/photo",blank=True,null=True)
+    photo7 = models.ImageField(upload_to="portfolio/photo",blank=True,null=True) 
     category_id = models.ForeignKey(Category, verbose_name="Category", on_delete=models.CASCADE)
     
     def get_category_name(self):

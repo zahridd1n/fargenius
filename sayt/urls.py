@@ -8,6 +8,8 @@ from django.urls import re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from my_app.views import render_site
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -23,6 +25,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+#    path('', render_site),  # Django admin site
     path('admin/', admin.site.urls),  # Django admin site
     path('api/', include([
         path('api28/', include('my_app.urls')),  # your API endpoints

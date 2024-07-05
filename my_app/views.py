@@ -7,6 +7,25 @@ from rest_framework import generics, permissions
 from rest_framework import generics
 import requests
 
+from bs4 import BeautifulSoup
+
+from django.http import HttpResponse
+def render_site(request):
+    try:
+        response = requests.get("https://fargenius.vercel.app")
+        if response.status_code == 200:
+            content = response.content.decode('utf-8')
+            soup = BeautifulSoup(content, 'html.parser')
+
+            # Add a base tag to handle relative URLs
+            base_tag = soup.new_tag('base', href='https://fargenius.vercel.app')
+            soup.head.insert(0, base_tag)
+
+            return HttpResponse(soup.prettify(), content_type='text/html')
+        else:
+            return HttpResponse("Failed to fetch the website content.", status=response.status_code)
+    except requests.exceptions.RequestException as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 class CategoryView(APIView):
     def get(self, request, id=None, lang=None):
@@ -67,8 +86,7 @@ class Category_about(APIView):
         category = Category.objects.filter(id=id)
         subcategories = SubCategory.objects.filter(subcat=id) if id else SubCategory.objects.all()
         subcategory_serializer = SubCategorySerializer(subcategories, many=True, context={'lang': lang})
-        category_serializer = CategorySerializer(category, many=True, context={'lang': lang})
-        
+        category_serializer = CategorySerializer(category, many=True, context={'lang': lang})        
         response_data = {
             'category_info':category_serializer.data,
             'subcategories': subcategory_serializer.data
@@ -93,6 +111,14 @@ class PortfolioFilter(APIView):
         serializer = PorfolioSerializer(portfolio, many=True, context={'lang': lang})
         return Response(serializer.data)
 
+class PortfolioFilter1(APIView):
+    def get(self, request, id=None, lang=None):
+        if id is not None:
+            portfolio = Porfolio.objects.filter(category_id=id)
+        else:
+            portfolio = Porfolio.objects.all()
+        serializer = PorfolioSerializer(portfolio, many=True, context={'lang': lang})
+        return Response(serializer.data)
 
 
 
@@ -124,8 +150,7 @@ class ContactView(APIView):
                 # Telegram bot orqali xabar jo'natish
                 url = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={chat_id}&text={text}'
                 requests.get(url)
-
-                return Response(serializer.data, status=201)
-            return Response(serializer.errors, status=400)
+                return Response({'succes':True}, status=201)
+            return Response({'succes':False}, status=400)
         except Exception as e:
             return Response({"error": str(e)}, status=500)

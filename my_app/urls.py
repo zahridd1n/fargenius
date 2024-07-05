@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import CategoryView,PortfolioView,ContactView,NavbarView,SliderView,AboutView,PortfolioFilter,ClientAboutView,ContactView,Category_about
+from .views import CategoryView,PortfolioView,ContactView,NavbarView,SliderView,AboutView,PortfolioFilter,ClientAboutView,ContactView,Category_about,PortfolioFilter1
 
 
 urlpatterns = [
@@ -14,6 +14,11 @@ urlpatterns = [
 
     path('view_category_portfolio/<str:lang>/', PortfolioFilter.as_view()),
     path('view_category_portfolio/<int:id>/<str:lang>/', PortfolioFilter.as_view()),
+
+
+
+    path('view_portfolio_with_cat_id/<int:id>/<str:lang>/', PortfolioFilter1.as_view()),
+
 
     path('view_contact/<str:lang>/', ContactView.as_view()),
     path('view_slider/<str:lang>/', SliderView.as_view()),

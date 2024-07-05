@@ -10,7 +10,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'description', 'icon')
+        fields = ('id', 'name', 'description', 'icon','icon_light')
 
     def get_name(self, obj):
         lang = self.context.get('lang', 'uz')

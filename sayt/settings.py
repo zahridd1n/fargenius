@@ -53,10 +53,44 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/django/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
+
+CORS_ALLOW_ALL_ORIGINS = True    # Boshqa manbalar uchun kerakli URLlarni qo'shing
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'accept-language'
+]
+CORS_ALLOW_CREDENTIALS = True  # Agar kerak bo'lsa, ma'lumot almashish ruxsat etiladi
 ROOT_URLCONF = 'sayt.urls'
 
 TEMPLATES = [
