@@ -1,7 +1,11 @@
 from django.contrib import admin
 
-from .models import Category,Contact,Text,About_image,Porfolio,Client,Social,Navbar,Slider,Client_about,Register,SubCategory
+from .models import Visitor,Category,Contact,Text,About_image,Porfolio,Client,Social,Navbar,Slider,Client_about,Register,SubCategory
 
+@admin.register(Visitor)
+class VisitorAdmin(admin.ModelAdmin):
+    list_display = ('ip_address', 'visit_datetime', 'count')
+    
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name','description','icon')

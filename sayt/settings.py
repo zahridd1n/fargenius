@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'my_app.middleware.SaveVisitorMiddleware',
 ]
 
 LOGGING = {

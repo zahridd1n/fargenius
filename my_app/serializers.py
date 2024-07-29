@@ -103,6 +103,8 @@ class PorfolioSerializer(serializers.ModelSerializer):
             instance.photo3.url if instance.photo3 else None,
             instance.photo4.url if instance.photo4 else None,
             instance.photo5.url if instance.photo5 else None,
+            instance.photo6.url if instance.photo6 else None,
+
         ]
         return photos
 

@@ -25,7 +25,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-#    path('', render_site),  # Django admin site
+    #path('', render_site),  # Django admin site
+    #path('ru/', render_site),
+    #path('en/', render_site),
     path('admin/', admin.site.urls),  # Django admin site
     path('api/', include([
         path('api28/', include('my_app.urls')),  # your API endpoints

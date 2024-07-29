@@ -7,6 +7,14 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True 
 
+class Visitor(models.Model):
+    ip_address = models.CharField(max_length=50, blank=True,null=True)
+    visit_datetime = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def count(self):
+        return Visitor.objects.filter().count()
+
 
 class Slider(models.Model):
     title = models.TextField()
