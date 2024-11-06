@@ -1,14 +1,16 @@
 from django.db import models
 
+
 class BaseModel(models.Model):
     data_created = models.DateTimeField(auto_now_add=True)
     data_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True 
+        abstract = True
+
 
 class Visitor(models.Model):
-    ip_address = models.CharField(max_length=50, blank=True,null=True)
+    ip_address = models.CharField(max_length=50, blank=True, null=True)
     visit_datetime = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -27,11 +29,11 @@ class Slider(models.Model):
     def __str__(self) -> str:
         return self.title
 
-    
+
 class Navbar(BaseModel):
-    logo_dark = models.ImageField(upload_to="logo/photo",verbose_name="Dark mode uchun logo ")
-    logo_light = models.ImageField(upload_to="logo/photo",verbose_name="Dark mode uchun logo ")
-    phone= models.CharField(max_length=13)
+    logo_dark = models.ImageField(upload_to="logo/photo", verbose_name="Dark mode uchun logo ")
+    logo_light = models.ImageField(upload_to="logo/photo", verbose_name="Dark mode uchun logo ")
+    phone = models.CharField(max_length=13)
 
 
 class Category(BaseModel):
@@ -41,8 +43,9 @@ class Category(BaseModel):
     description = models.TextField()
     description_ru = models.TextField(null=True, blank=True)
     description_en = models.TextField(null=True, blank=True)
-    icon = models.ImageField(upload_to="Service/photo",   verbose_name='Servis  ikon kiriting')
-    icon_light = models.ImageField(upload_to="Service/photo", verbose_name="liGhT model uchun ikon")   
+    icon = models.ImageField(upload_to="Service/photo", verbose_name='Servis  ikon kiriting')
+    icon_light = models.ImageField(upload_to="Service/photo", verbose_name="liGhT model uchun ikon")
+
     def __str__(self):
         return self.name
 
@@ -58,11 +61,16 @@ class SubCategory(BaseModel):
     sub_description1_ru = models.TextField(null=True, blank=True)
     sub_description1_en = models.TextField(null=True, blank=True)
     sub_photo = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting')
-    sub_photo1 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    sub_photo2 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    sub_photo3 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
-    sub_photo4 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting',blank=True,null=True)
+    sub_photo1 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting', blank=True,
+                                   null=True)
+    sub_photo2 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting', blank=True,
+                                   null=True)
+    sub_photo3 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting', blank=True,
+                                   null=True)
+    sub_photo4 = models.ImageField(upload_to="Service/photo", verbose_name='Portfolio rasmini kiriting', blank=True,
+                                   null=True)
     subcat = models.ForeignKey(Category, verbose_name='Qaysi categoriyaga oidligini kiriting', on_delete=models.CASCADE)
+
     def __str__(self):
         return self.subcat_title
 
@@ -77,7 +85,7 @@ class Text(BaseModel):
 
     def __str__(self) -> str:
         return self.title
-    
+
 
 class About_image(BaseModel):
     description = models.TextField()
@@ -109,14 +117,13 @@ class Porfolio(BaseModel):
     photo3 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 3', blank=True, null=True)
     photo4 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 4', blank=True, null=True)
     photo5 = models.ImageField(upload_to="portfolio/photo", verbose_name='Additional Photo 5', blank=True, null=True)
-    photo6 = models.ImageField(upload_to="portfolio/photo",blank=True,null=True)
-    photo7 = models.ImageField(upload_to="portfolio/photo",blank=True,null=True) 
+    photo6 = models.ImageField(upload_to="portfolio/photo", blank=True, null=True)
+    photo7 = models.ImageField(upload_to="portfolio/photo", blank=True, null=True)
     category_id = models.ForeignKey(Category, verbose_name="Category", on_delete=models.CASCADE)
-    
-    def get_category_name(self):
-        return self.category_id.name 
 
-    
+    def get_category_name(self):
+        return self.category_id.name
+
 
 class Client_about(BaseModel):
     description = models.TextField()
@@ -163,5 +170,17 @@ class Register(BaseModel):
     def __str__(self):
         return self.name
 
-    
 
+# ------------------------Payme uchun----------------------------------------
+
+class Order(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    total = models.IntegerField(default=0)
+    is_finished = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Order  - {self.total}'
+
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'

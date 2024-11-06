@@ -5,7 +5,7 @@ from .models import Visitor,Category,Contact,Text,About_image,Porfolio,Client,So
 @admin.register(Visitor)
 class VisitorAdmin(admin.ModelAdmin):
     list_display = ('ip_address', 'visit_datetime', 'count')
-    
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name','description','icon')
@@ -59,3 +59,5 @@ class Client_aboutAdmin(admin.ModelAdmin):
 @admin.register(Register)
 class RegisterAdmin(admin.ModelAdmin):
     list_display = ('name','phone_num','service')
+
+

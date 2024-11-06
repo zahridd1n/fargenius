@@ -41,7 +41,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
+    'paycomuz',
 ]
+
+PAYCOM_SETTINGS = {
+    "KASSA_ID": "672a15d0e51de1c6a3a7bdc0",  # token
+    "SECRET_KEY": "K@YZTH#uSbizPgaMvUy0%jMZRXB49HWe%?hJ",  # password
+    "ACCOUNTS": {
+        "KEY": "order_id"
+    },
+    "TOKEN": '672a15d0e51de1c6a3a7bdc0'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,24 +67,24 @@ MIDDLEWARE = [
     'my_app.middleware.SaveVisitorMiddleware',
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/django/debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/var/log/django/debug.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
 
 
 CORS_ALLOW_ALL_ORIGINS = True    # Boshqa manbalar uchun kerakli URLlarni qo'shing
