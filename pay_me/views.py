@@ -10,7 +10,7 @@ class CheckOrder(Paycom):
 
         if not order:
             return self.ORDER_NOT_FOND
-        if order.product.price * 100 != amount:
+        if order.total * 100 != amount:
             return self.INVALID_AMOUNT
 
         return self.ORDER_FOUND
