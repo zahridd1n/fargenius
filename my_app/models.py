@@ -178,8 +178,7 @@ class Order(models.Model):
     total = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f'Order  - {self.total}'
+
 
     class Meta:
         verbose_name = 'Order'

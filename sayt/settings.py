@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'paycomuz',
+    'pay_me',
 ]
 
 PAYCOM_SETTINGS = {

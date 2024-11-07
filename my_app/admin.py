@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import Visitor,Category,Contact,Text,About_image,Porfolio,Client,Social,Navbar,Slider,Client_about,Register,SubCategory
+from .models import  Order,Visitor,Category,Contact,Text,About_image,Porfolio,Client,Social,Navbar,Slider,Client_about,Register,SubCategory
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    # Ko'rsatiladigan maydonlar ro'yxatini tuzish
+    list_display = ('id', 'user', 'total', 'is_finished')  # 'id' ni qo'shish
+
+# Order modelini admin panelda ro'yxatga olish
 
 @admin.register(Visitor)
 class VisitorAdmin(admin.ModelAdmin):
