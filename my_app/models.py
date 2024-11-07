@@ -177,7 +177,9 @@ class Order(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     total = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
-
+    name = models.CharField(max_length=100, null=True, blank=True)
+    phone_num = models.CharField(max_length=15, null=True, blank=True)
+    code = models.CharField(max_length=50, null=True, blank=True)
 
 
     class Meta:
