@@ -11,8 +11,6 @@ from payment.views import PaymeCallBackAPIView
 
 
 payme = Payme(payme_id=PAYME_ID)
-
-
 from decimal import Decimal
 
 @api_view(['POST'])
@@ -21,6 +19,8 @@ def create_order(request):
     name = request.data.get('name')
     phone_number = request.data.get('phone_number')
     code = request.data.get('code')
+    tarif = request.data.get('tarif')
+
 
     user = User.objects.get(username='Paycom')
     order = Order.objects.create(
@@ -29,7 +29,8 @@ def create_order(request):
         is_finished=False,
         name=name,
         phone_num=phone_number,
-        code=code
+        code=code,
+        tarif=tarif
     )
 
     total1 = int(order.total)

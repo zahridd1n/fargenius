@@ -5,7 +5,7 @@ from .models import  Order,Visitor,Category,Contact,Text,About_image,Porfolio,Cl
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     # Ko'rsatiladigan maydonlar ro'yxatini tuzish
-    list_display = ('id', 'user', 'total', 'is_finished')  # 'id' ni qo'shish
+    list_display = ('id', 'user', 'total', 'is_finished','tarif')  # 'id' ni qo'shish
 
 # Order modelini admin panelda ro'yxatga olish
 
