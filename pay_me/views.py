@@ -49,7 +49,7 @@ def create_order(request):
     code = request.data.get('code')
 
     user = User.objects.get(username='Paycom')
-    total_2 = f"{float(total):.2f}"
+    total_2 = int(float(total) * 100)
     order = Order.objects.create(user=user, total=total, is_finished=False, name=name, phone_num=phone_number, code=code)
     url = paycom.create_initialization(amount=total_2, order_id=order.id, return_url='https://example.com/success/')
     # Bu yerda serializer orqali yoki to'g'ridan-to'g'ri response qaytarish mumkin
