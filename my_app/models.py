@@ -177,7 +177,7 @@ from decimal import Decimal
 
 class Order(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    total = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
     name = models.CharField(max_length=100, null=True, blank=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
