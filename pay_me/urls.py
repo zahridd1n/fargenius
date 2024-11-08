@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TestView, create_order, get_order
+from .views import TestView, create_order, get_order,CheckOrder
 
 urlpatterns = [
     path('paycom/', TestView.as_view()),
