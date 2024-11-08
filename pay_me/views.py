@@ -85,6 +85,7 @@ def create_order(request):
             'phone_number': order.phone_num,
             'is_finished': order.is_finished,
             'url': url,
+            'url2': ur2,
         }
     })
 
