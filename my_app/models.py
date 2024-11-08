@@ -173,15 +173,15 @@ class Register(BaseModel):
 
 # ------------------------Payme uchun----------------------------------------
 
+from decimal import Decimal
+
 class Order(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    total = models.IntegerField(default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     is_finished = models.BooleanField(default=False)
     name = models.CharField(max_length=100, null=True, blank=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
     code = models.CharField(max_length=50, null=True, blank=True)
 
-
-    class Meta:
-        verbose_name = 'Order'
-        verbose_name_plural = 'Orders'
+    def __str__(self):
+        return f"Order {self.id} - Total: {self.total}"
