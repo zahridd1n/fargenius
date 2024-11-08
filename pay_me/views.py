@@ -41,6 +41,8 @@ class TestView(MerchantAPIView):
     VALIDATE_CLASS = CheckOrder
 
 
+from decimal import Decimal
+
 @api_view(['POST'])
 def create_order(request):
     total = request.data.get('total')
@@ -58,9 +60,16 @@ def create_order(request):
         code=code
     )
 
-    # create_initialization funksiyasiga total_2 qiymatini Decimal formatida uzatamiz
+    # order.total qiymatini Decimal formatida formatlaymiz
+    total_amount = Decimal(order.total) * 100  # so'mda (yoki boshqa valyutada)
+    
+    # Paycom orqali to'lovni yaratish
+    url = paycom.create_initialization(
+        amount=int(total_amount),  # amount qiymatini integer formatida yuboramiz
+        order_id=order.id,
+        return_url='https://example.com/success/'
+    )
 
-    url = paycom.create_initialization(amount=(order.total*100), order_id=order.id, return_url='https://example.com/success/')
     return Response({
         "message": "Order created successfully",
         'data': {
@@ -71,10 +80,7 @@ def create_order(request):
             'phone_number': order.phone_num,
             'is_finished': order.is_finished,
             'url': url,
-
         }
-
-
     })
 
 @api_view(['GET'])
