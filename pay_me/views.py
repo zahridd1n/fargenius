@@ -49,7 +49,6 @@ def create_order(request):
     code = request.data.get('code')
 
     user = User.objects.get(username='Paycom')
-    # Total qiymatini Decimal formatida ikki o'nlik shaklida yaratamiz
     total_2 = Decimal(total).quantize(Decimal("0.00"))
 
     order = Order.objects.create(
