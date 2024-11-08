@@ -64,17 +64,22 @@ def create_order(request):
     total_amount = Decimal(order.total) * 100  # so'mda (yoki boshqa valyutada)
     
     # Paycom orqali to'lovni yaratish
+    account_info = {
+        "order_id": order.id  # 'account' ichida 'order_id' va qiymat sifatida order.id
+    }
+
     url = paycom.create_initialization(
         amount=int(total_amount),  # amount qiymatini integer formatida yuboramiz
-        order_id=order.id,
+        account=account_info,  # account parametri ichida order_id yuboriladi
         return_url='https://example.com/success/'
     )
 
     ur2 = paycom.create_initialization(
         amount=50000.00,  # amount qiymatini integer formatida yuboramiz
-        order_id="1",
+        account={"order_id": "1"},  # account ichida order_id: 1
         return_url='https://example.com/success/'
     )
+    
     return Response({
         "message": "Order created successfully",
         'data': {
