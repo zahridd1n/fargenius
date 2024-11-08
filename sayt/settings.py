@@ -46,15 +46,7 @@ INSTALLED_APPS = [
     'payme',
 ]
 
-PAYCOM_SETTINGS = {
-    "KASSA_ID": "672a15d0e51de1c6a3a7bdc0",  # token
-    "SECRET_KEY": "3UnRQ&K5je2ujmkXq8oTYr0atz0YK&94cdi8",  # password
 
-    "ACCOUNTS": {
-        "KEY": "order_id"
-    },
-    "TOKEN": '672a15d0e51de1c6a3a7bdc0'
-}
 
 
 
