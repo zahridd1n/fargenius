@@ -1,5 +1,5 @@
 from django.db import models
-
+import requests
 
 class BaseModel(models.Model):
     data_created = models.DateTimeField(auto_now_add=True)
@@ -189,7 +189,46 @@ class Order(models.Model):
     
     @classmethod
     def mark_as_paid(cls, order_id):
+        # Получаем заказ по ID
         order = cls.objects.get(id=order_id)
+        
+        # Устанавливаем is_finished в True
         order.is_finished = True
         order.save()
+        
+        # Если заказ завершен, отправляем данные в Bitrix24
+        if order.is_finished:
+            cls.send_to_bitrix24(order)
 
+    @classmethod
+    def send_to_bitrix24(cls, order):
+        url = "https://idosmetov.bitrix24.kz/rest/24/yeh742klre4ckgpb/crm.lead.add.json"
+        
+        # Проверка и корректировка номера телефона
+        
+        # Если номер не начинается с +998, добавляем префикс +998
+       
+
+        # Данные для отправки в Bitrix24
+        data = {
+            'fields': {
+                'TITLE': f"Yangi to'lov qilgan mijoz#",  # Название лида
+                'NAME': order.name,  # Имя клиента
+                'PHONE': [{'VALUE': order.phone_number, 'VALUE_TYPE': 'WORK'}],  # Телефон с правильным форматом
+                'COMMENTS': f"Tarif: {order.tarif} buyurtma raqami {order.id}" ,  # Дополнительная информация
+                'OPPORTUNITY': f"To'lov qilindi {order.total}",  # Сумма заказа
+                'CURRENCY_ID': 'UZS',  # Валюта (UZS)
+                'IS_OPENED': 'Y',  # Доступен для всех
+                'SOURCE_ID': 'Restart Dosmedov saytidan',  # Дополнительно об источнике (не заполнено)
+                'COMMENTS': "ushbu foydalanuvchi boshlangich tolovni amalga oshirdi",  # Комментарии (не заполнено)
+            }
+        }
+
+        # Отправляем POST-запрос в Bitrix24
+        response = requests.post(url, json=data)
+        
+        # Проверка ответа
+        if response.status_code == 200:
+            print('Лид успешно добавлен в Bitrix24:', response.json())
+        else:
+            print('Ошибка при добавлении лида в Bitrix24:', response.status_code, response.text)
