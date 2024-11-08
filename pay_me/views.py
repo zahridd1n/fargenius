@@ -61,7 +61,7 @@ def create_order(request):
     )
 
     # order.total qiymatini Decimal formatida formatlaymiz
-    total_amount = order.total * 100  # so'mda (yoki boshqa valyutada)
+    total_amount = int(total)  # so'mda (yoki boshqa valyutada)
     
     # Paycom orqali to'lovni yaratish
     url = paycom.create_initialization(
