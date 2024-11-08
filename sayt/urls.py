@@ -35,8 +35,7 @@ urlpatterns = [
     path('api/', include([
         path('api28/', include('my_app.urls')),  # your API endpoints
         path('payment/', include('pay_me.urls')), 
-        # path('payment2/', include('newpayme.urls')), # payme uchun
-        # payme uchun
+        
         path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
