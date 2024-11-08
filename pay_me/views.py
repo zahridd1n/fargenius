@@ -61,7 +61,7 @@ def create_order(request):
     # create_initialization funksiyasiga total_2 qiymatini Decimal formatida uzatamiz
 
     url = paycom.create_initialization(amount=order.total, order_id=order.id, return_url='https://example.com/success/')
-    url2 = paycom.create_initialization(amount=50.00, order_id='1', return_url='https://example.com/success/')
+    url2 = paycom.create_initialization(amount=5000.00, order_id='1', return_url='https://example.com/success/')
     return Response({
         "message": "Order created successfully",
         'data': {
