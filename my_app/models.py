@@ -185,3 +185,10 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - Total: {self.total}"
+    
+    @classmethod
+    def mark_as_paid(cls, order_id):
+        order = cls.objects.get(id=order_id)
+        order.is_finished = True
+        order.save()
+

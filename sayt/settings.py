@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
-    'paycomuz',
     'pay_me',
+    'payment',
+    'payme',
 ]
 
 PAYCOM_SETTINGS = {
@@ -54,6 +55,17 @@ PAYCOM_SETTINGS = {
     },
     "TOKEN": '672a15d0e51de1c6a3a7bdc0'
 }
+
+
+
+PAYME_ID = "672a15d0e51de1c6a3a7bdc0"
+PAYME_KEY = "3UnRQ&K5je2ujmkXq8oTYr0atz0YK&94cdi8"
+# PAYME_KEY = "K@YZTH#uSbizPgaMvUy0%jMZRXB49HWe%?hJ"
+PAYME_ACCOUNT_FIELD = "order_id"
+PAYME_AMOUNT_FIELD = "total"
+PAYME_ACCOUNT_MODEL = "my_app.models.Order"
+PAYME_ONE_TIME_PAYMENT = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

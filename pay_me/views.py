@@ -1,44 +1,16 @@
-from paycomuz.views import MerchantAPIView
-from paycomuz import Paycom
-paycom = Paycom()
-from django.urls import path
 from my_app.models import Order
-from decimal import Decimal
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . import serializers
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
+from payme import Payme
+from sayt.settings import PAYME_ID
 
-class CheckOrder(Paycom):
-    def check_order(self, amount: int, account: dict, *args, **kwargs):
-        order = Order.objects.filter(id=account["order_id"], is_finished=False).first()
-
-        if not order:
-            return self.ORDER_NOT_FOND
-        if order.total * 100 != amount:
-            return self.INVALID_AMOUNT
-
-        return self.ORDER_FOUND
+from payment.views import PaymeCallBackAPIView
 
 
-    def successfully_payment(self, account: dict, transaction, *args, **kwargs):
-        order = Order.objects.filter(id=transaction.order_key).first()
-
-        if not order:
-            return self.ORDER_NOT_FOND
-
-        order.is_finished = True
-        order.save()
-
-
-    def cancel_payment(self, account, transaction, *args, **kwargs):
-        print(account)
-
-class TestView(MerchantAPIView):
-    VALIDATE_CLASS = CheckOrder
+payme = Payme(payme_id=PAYME_ID)
 
 
 from decimal import Decimal
@@ -60,21 +32,10 @@ def create_order(request):
         code=code
     )
 
-    # order.total qiymatini Decimal formatida formatlaymiz
-    total_amount = int(total)  # so'mda (yoki boshqa valyutada)
-    total2 = total_amount * 100
-    # Paycom orqali to'lovni yaratish
-    url = paycom.create_initialization(
-        amount=total2,  # amount qiymatini integer formatida yuboramiz
-        order_id=order.id,
-        return_url='https://example.com/success/'
-    )
+    total1 = int(order.total)
+    url = payme.initializer.generate_pay_link(id=order.id, amount=total1, return_url=code)
 
-    ur2 = paycom.create_initialization(
-        amount=50000.00,  # amount qiymatini integer formatida yuboramiz
-        order_id="1",
-        return_url='https://example.com/success/'
-    )
+
     return Response({
         "message": "Order created successfully",
         'data': {
@@ -85,13 +46,7 @@ def create_order(request):
             'phone_number': order.phone_num,
             'is_finished': order.is_finished,
             'url': url,
-            'url2': ur2,
-            'total_amount': total_amount,
         }
     })
 
-@api_view(['GET'])
-def get_order(request, code):
-    order = get_object_or_404(Order, code=code)
-    serializer = serializers.OrderSerializer(order)
-    return Response(serializer.data)
+
