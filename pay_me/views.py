@@ -3,6 +3,7 @@ from paycomuz import Paycom
 paycom = Paycom()
 from django.urls import path
 from my_app.models import Order
+from decimal import Decimal
 
 
 from rest_framework.decorators import api_view
@@ -42,29 +43,39 @@ class TestView(MerchantAPIView):
 
 @api_view(['POST'])
 def create_order(request):
-    # user_id = request.data.get('user')
     total = request.data.get('total')
     name = request.data.get('name')
     phone_number = request.data.get('phone_number')
     code = request.data.get('code')
 
     user = User.objects.get(username='Paycom')
-    total_2 = int(float(total) * 100)
-    order = Order.objects.create(user=user, total=total_2, is_finished=False, name=name, phone_num=phone_number, code=code)
-    url = paycom.create_initialization(amount=total_2, order_id=order.id, return_url='https://example.com/success/')
-    # Bu yerda serializer orqali yoki to'g'ridan-to'g'ri response qaytarish mumkin
-    return Response({"message": "Order created successfully",
-                     'data':{
-                         'order_id': order.id,
-                         'code': order.code,
-                         'total': order.total,
-                         'name': order.name,
-                         'phone_number': order.phone_num,
-                         'is_finished': order.is_finished,
-                         'url': url
+    # Total qiymatini Decimal formatida ikki o'nlik shaklida yaratamiz
+    total_2 = Decimal(total).quantize(Decimal("0.00"))
 
-                     }}
-                    )
+    order = Order.objects.create(
+        user=user,
+        total=total_2,
+        is_finished=False,
+        name=name,
+        phone_num=phone_number,
+        code=code
+    )
+
+    # create_initialization funksiyasiga total_2 qiymatini Decimal formatida uzatamiz
+    url = paycom.create_initialization(amount=total_2, order_id=order.id, return_url='https://example.com/success/')
+
+    return Response({
+        "message": "Order created successfully",
+        'data': {
+            'order_id': order.id,
+            'code': order.code,
+            'total': order.total,
+            'name': order.name,
+            'phone_number': order.phone_num,
+            'is_finished': order.is_finished,
+            'url': url
+        }
+    })
 
 @api_view(['GET'])
 def get_order(request, code):
