@@ -59,8 +59,10 @@ def create_order(request):
         phone_num=phone_number,
         code=code
     )
-
+    total3 = order.total * 100
+    total4 = order.total * Decimal(100)
     # create_initialization funksiyasiga total_2 qiymatini Decimal formatida uzatamiz
+
     url = paycom.create_initialization(amount=order.total, order_id=order.id, return_url='https://example.com/success/')
 
     return Response({
@@ -72,8 +74,12 @@ def create_order(request):
             'name': order.name,
             'phone_number': order.phone_num,
             'is_finished': order.is_finished,
-            'url': url
+            'url': url,
+            'total3':total3,
+            'total4': total4
         }
+
+
     })
 
 @api_view(['GET'])
