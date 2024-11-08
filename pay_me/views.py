@@ -1,5 +1,6 @@
 from paycomuz.views import MerchantAPIView
 from paycomuz import Paycom
+paycom = Paycom()
 from django.urls import path
 from my_app.models import Order
 
@@ -50,7 +51,7 @@ def create_order(request):
     user = User.objects.get(username='Paycom')
 
     order = Order.objects.create(user=user, total=total, is_finished=False, name=name, phone_num=phone_number, code=code)
-
+    url = paycom.create_initialization(amount=total, order_id=order.id, return_url='https://example.com/success/')
     # Bu yerda serializer orqali yoki to'g'ridan-to'g'ri response qaytarish mumkin
     return Response({"message": "Order created successfully",
                      'data':{
@@ -60,6 +61,7 @@ def create_order(request):
                          'name': order.name,
                          'phone_number': order.phone_num,
                          'is_finished': order.is_finished,
+                         'url': url
 
                      }}
                     )
