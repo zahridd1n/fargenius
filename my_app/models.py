@@ -174,6 +174,8 @@ class Register(BaseModel):
 # ------------------------Payme uchun----------------------------------------
 
 from decimal import Decimal
+import aiohttp
+import asyncio
 
 class Order(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
@@ -186,7 +188,7 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - Total: {self.total}"
-    
+
     @classmethod
     def mark_as_paid(cls, order_id):
         # Получаем заказ по ID
@@ -195,40 +197,38 @@ class Order(models.Model):
         # Устанавливаем is_finished в True
         order.is_finished = True
         order.save()
-        
+
         # Если заказ завершен, отправляем данные в Bitrix24
         if order.is_finished:
-            cls.send_to_bitrix24(order)
+            asyncio.run(cls.send_to_bitrix24(order))
 
     @classmethod
-    def send_to_bitrix24(cls, order):
+    async def send_to_bitrix24(cls, order):
         url = "https://idosmetov.bitrix24.kz/rest/24/yeh742klre4ckgpb/crm.lead.add.json"
         
         # Проверка и корректировка номера телефона
-        
-        # Если номер не начинается с +998, добавляем префикс +998
-       
+        phone_number = order.phone_num
+        if not phone_number.startswith("+998"):
+            phone_number = f"+998{phone_number.lstrip('+')}"
 
         # Данные для отправки в Bitrix24
         data = {
             'fields': {
-                'TITLE': f"Yangi to'lov qilgan mijoz#",  # Название лида
+                'TITLE': f"To'lov qilindi {order.tarif}uchun ",  # Название лида
                 'NAME': order.name,  # Имя клиента
-                'PHONE': [{'VALUE': order.phone_number, 'VALUE_TYPE': 'WORK'}],  # Телефон с правильным форматом
-                'COMMENTS': f"Tarif: {order.tarif} buyurtma raqami {order.id}" ,  # Дополнительная информация
-                'OPPORTUNITY': f"To'lov qilindi {order.total}",  # Сумма заказа
+                'PHONE': [{'VALUE': phone_number, 'VALUE_TYPE': 'WORK'}],  # Телефон с правильным форматом
+                'OPPORTUNITY': order.total,  # Сумма заказа (только число)
                 'CURRENCY_ID': 'UZS',  # Валюта (UZS)
                 'IS_OPENED': 'Y',  # Доступен для всех
-                'SOURCE_ID': 'Restart Dosmedov saytidan',  # Дополнительно об источнике (не заполнено)
-                'COMMENTS': "ushbu foydalanuvchi boshlangich tolovni amalga oshirdi",  # Комментарии (не заполнено)
+                'SOURCE_ID': 'Restart Dosmedov saytidan',  # Источник
+                'COMMENTS': "Ushbu foydalanuvchi boshlangich tolovni amalga oshirdi {order.tarif} buyurtma raqami {order.id} ",  # Комментарии
             }
         }
 
-        # Отправляем POST-запрос в Bitrix24
-        response = requests.post(url, json=data)
-        
-        # Проверка ответа
-        if response.status_code == 200:
-            print('Лид успешно добавлен в Bitrix24:', response.json())
-        else:
-            print('Ошибка при добавлении лида в Bitrix24:', response.status_code, response.text)
+        # Асинхронный POST-запрос
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=data) as response:
+                if response.status == 200:
+                    print('Лид успешно добавлен в Bitrix24:', await response.json())
+                else:
+                    print('Ошибка при добавлении лида в Bitrix24:', response.status, await response.text())
