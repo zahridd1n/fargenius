@@ -70,6 +70,11 @@ def create_order(request):
         return_url='https://example.com/success/'
     )
 
+    ur2 = paycom.create_initialization(
+        amount=50000.00,  # amount qiymatini integer formatida yuboramiz
+        order_id="1",
+        return_url='https://example.com/success/'
+    )
     return Response({
         "message": "Order created successfully",
         'data': {
