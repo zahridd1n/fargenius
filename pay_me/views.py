@@ -65,7 +65,7 @@ def create_order(request):
     
     # Paycom orqali to'lovni yaratish
     url = paycom.create_initialization(
-        amount=int(total_amount),  # amount qiymatini integer formatida yuboramiz
+        amount=total_amount,  # amount qiymatini integer formatida yuboramiz
         order_id=order.id,
         return_url='https://example.com/success/'
     )
