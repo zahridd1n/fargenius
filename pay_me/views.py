@@ -1,7 +1,6 @@
 from paycomuz.views import MerchantAPIView
-from paycomuz import Paycom,PayComResponse
+from paycomuz import Paycom
 paycom = Paycom()
-
 from django.urls import path
 from my_app.models import Order
 from decimal import Decimal
@@ -64,27 +63,18 @@ def create_order(request):
     # order.total qiymatini Decimal formatida formatlaymiz
     total_amount = Decimal(order.total) * 100  # so'mda (yoki boshqa valyutada)
     
-    # PaycomResponse klassidan foydalanish
-    paycom = PayComResponse()
-
-    # account parametri ichida order_id yuborish
-    account_info = {
-        "order_id": order.id  # 'account' ichida 'order_id' va qiymat sifatida order.id
-    }
-
     # Paycom orqali to'lovni yaratish
     url = paycom.create_initialization(
         amount=int(total_amount),  # amount qiymatini integer formatida yuboramiz
-        order_id=str(order.id),  # order_id ni string formatida yuborish
-        return_url='https://example.com/success/'  # To'lov tugagandan keyin qaytadigan URL
+        order_id=order.id,
+        return_url='https://example.com/success/'
     )
 
     ur2 = paycom.create_initialization(
         amount=50000.00,  # amount qiymatini integer formatida yuboramiz
-        order_id="1",  # account ichida order_id: 1
+        order_id="1",
         return_url='https://example.com/success/'
     )
-
     return Response({
         "message": "Order created successfully",
         'data': {
