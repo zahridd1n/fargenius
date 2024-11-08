@@ -86,6 +86,7 @@ def create_order(request):
             'is_finished': order.is_finished,
             'url': url,
             'url2': ur2,
+            'total_amount': total_amount,
         }
     })
 
